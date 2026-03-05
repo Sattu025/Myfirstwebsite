@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PIX — Photography</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0e0e0e;
+      --cream: #f5f0e8;
+      --warm-white: #faf8f4;
+      --accent: #e8c170;
+      --accent-dim: #c9a450;
+      --mid: #6b6560;
+      --light-border: #e0d9ce;
+      --dark-section: #141210;
+      --card-dark: #1c1917;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 4rem;
+      background: rgba(14,14,14,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(232,193,112,0.12);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem; font-weight: 900;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+    }
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: rgba(245,240,232,0.75);
+      font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta {
+      background: var(--accent); color: var(--ink);
+      border: none; padding: 0.55rem 1.4rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+      font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-dim); }
+
+    /* Hamburger */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--cream); display: block; transition: all 0.3s; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      background: var(--dark-section);
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+      padding: 0 4rem;
+    }
+    .hero-grain {
+      position: absolute; inset: 0; opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+    .hero-accent-line {
+      position: absolute; top: 0; right: 25%;
+      width: 1px; height: 100%;
+      background: linear-gradient(to bottom, transparent, rgba(232,193,112,0.25), transparent);
+    }
+    .hero-accent-line2 {
+      position: absolute; top: 0; right: 60%;
+      width: 1px; height: 60%;
+      background: linear-gradient(to bottom, transparent, rgba(232,193,112,0.1), transparent);
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 820px; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      color: var(--accent); font-size: 0.75rem;
+      letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-eyebrow::before { content:''; width: 40px; height: 1px; background: var(--accent); }
+    .hero-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 900; line-height: 1.0;
+      color: var(--cream);
+      animation: fadeUp 0.8s 0.15s ease both;
+    }
+    .hero-headline em {
+      font-style: italic; color: var(--accent);
+    }
+    .hero-tagline {
+      margin-top: 1.8rem;
+      font-size: 1.1rem; font-weight: 300;
+      color: rgba(245,240,232,0.55); line-height: 1.7;
+      max-width: 460px;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+    .hero-actions {
+      margin-top: 3rem; display: flex; gap: 1.2rem; flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.45s ease both;
+    }
+    .btn-primary {
+      background: var(--accent); color: var(--ink);
+      border: none; padding: 0.85rem 2.2rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s, transform 0.15s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover { background: var(--accent-dim); transform: translateY(-2px); }
+    .btn-ghost {
+      background: transparent; color: var(--cream);
+      border: 1px solid rgba(245,240,232,0.25);
+      padding: 0.85rem 2.2rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: border-color 0.2s, color 0.2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 4rem;
+      display: flex; align-items: center; gap: 0.7rem;
+      color: rgba(245,240,232,0.35); font-size: 0.7rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      animation: fadeUp 0.8s 0.6s ease both;
+    }
+    .scroll-line { width: 40px; height: 1px; background: rgba(245,240,232,0.2); }
+    .hero-image-block {
+      position: absolute; right: 0; top: 0; bottom: 0;
+      width: 35%;
+      background: linear-gradient(135deg, #1e1a17 0%, #2a2219 100%);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-image-block::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, var(--dark-section) 0%, transparent 40%);
+    }
+    .hero-img-placeholder {
+      width: 100%; height: 100%;
+      background: linear-gradient(160deg, #2c231b 0%, #1a1410 50%, #261e16 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem; color: rgba(232,193,112,0.08);
+      font-weight: 900;
+    }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 7rem 4rem; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+      font-weight: 500; margin-bottom: 1.2rem;
+    }
+    .section-label::before { content:''; width: 32px; height: 1px; background: currentColor; }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      font-weight: 700; line-height: 1.15;
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--cream);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+    }
+    #about .section-label { color: var(--mid); }
+    #about .section-title { color: var(--ink); }
+    .about-text {
+      font-size: 1.05rem; line-height: 1.85; color: #4a4540; margin-top: 1.6rem;
+    }
+    .about-text p + p { margin-top: 1.2rem; }
+    .about-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2.8rem;
+    }
+    .stat-item { border-left: 2px solid var(--accent); padding-left: 1rem; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem; font-weight: 900; color: var(--ink);
+    }
+    .stat-label { font-size: 0.78rem; color: var(--mid); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem; }
+    .about-visual {
+      position: relative;
+    }
+    .about-img-main {
+      width: 100%; aspect-ratio: 4/5;
+      background: linear-gradient(145deg, #2c231b 0%, #1a1410 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-size: 3rem;
+      color: rgba(232,193,112,0.15); font-weight: 900; font-style: italic;
+      overflow: hidden; position: relative;
+    }
+    .about-img-badge {
+      position: absolute; bottom: -1.5rem; right: -1.5rem;
+      background: var(--accent); color: var(--ink);
+      width: 120px; height: 120px; border-radius: 50%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
+      font-weight: 700; text-align: center; line-height: 1.4;
+    }
+    .about-img-badge strong { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; display: block; }
+
+    /* ── GALLERY ── */
+    #gallery { background: var(--dark-section); }
+    #gallery .section-label { color: var(--accent); }
+    #gallery .section-title { color: var(--cream); }
+    .gallery-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+    .gallery-subtitle { color: rgba(245,240,232,0.45); font-size: 0.9rem; margin-top: 0.6rem; }
+    .gallery-filter { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .filter-btn {
+      background: transparent; border: 1px solid rgba(245,240,232,0.15);
+      color: rgba(245,240,232,0.5); padding: 0.45rem 1.1rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.75rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); }
+
+    /* Masonry-style grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3px;
+    }
+    .gallery-item {
+      position: relative; overflow: hidden; cursor: pointer;
+      background: var(--card-dark);
+    }
+    .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+    .gallery-item:nth-child(5) { grid-column: span 2; }
+    .gallery-item:nth-child(8) { grid-column: span 2; }
+
+    .gallery-item svg { display: block; width: 100%; height: 100%; }
+    .gallery-item:nth-child(1) svg { min-height: 440px; }
+    .gallery-item svg { min-height: 220px; }
+
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,8,6,0.92) 0%, rgba(10,8,6,0.2) 55%, transparent 100%);
+      opacity: 0; transition: opacity 0.32s ease;
+      display: flex; flex-direction: column; align-items: flex-start;
+      justify-content: flex-end; padding: 1.4rem;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-info { color: var(--cream); flex: 1; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; }
+    .gallery-info .gi-tag { font-size: 0.65rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.3rem; }
+    .gallery-info h4 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .gallery-info .gi-price { font-size: 0.75rem; color: rgba(245,240,232,0.55); margin-bottom: 0.8rem; }
+    .gi-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .gi-btn {
+      font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.4rem 0.9rem; border: none; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .gi-btn-buy { background: var(--accent); color: var(--ink); }
+    .gi-btn-buy:hover { background: #fff; }
+    .gi-btn-rent { background: transparent; border: 1px solid rgba(245,240,232,0.35); color: var(--cream); }
+    .gi-btn-rent:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Lightbox */
+    #lightbox {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(10,8,6,0.96); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center; padding: 2rem;
+    }
+    #lightbox.open { display: flex; }
+    .lb-inner { position: relative; max-width: 880px; width: 100%; }
+    .lb-img { width: 100%; max-height: 75vh; object-fit: contain; display: block; }
+    .lb-img svg { width: 100%; height: auto; max-height: 75vh; }
+    #lb-svg-wrap svg { width: 100%; height: auto; max-height: 68vh; display: block; }
+    .lb-close {
+      position: absolute; top: -2.5rem; right: 0;
+      background: none; border: none; color: rgba(245,240,232,0.5);
+      font-size: 1.6rem; cursor: pointer; transition: color 0.2s;
+    }
+    .lb-close:hover { color: var(--accent); }
+    .lb-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 1.2rem; flex-wrap: wrap; gap: 1rem;
+    }
+    .lb-meta-left .lb-tag { font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; }
+    .lb-meta-left .lb-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--cream); margin-top: 0.2rem; }
+    .lb-meta-left .lb-desc { font-size: 0.85rem; color: rgba(245,240,232,0.45); margin-top: 0.3rem; }
+    .lb-actions { display: flex; gap: 0.7rem; }
+    .lb-price { font-size: 0.8rem; color: rgba(245,240,232,0.4); margin-top: 0.4rem; }
+
+    /* Bg tints */
+    .g1 { background: linear-gradient(135deg, #1a1208 0%, #2a1e0e 100%); }
+    .g2 { background: linear-gradient(135deg, #0e1520 0%, #162030 100%); }
+    .g3 { background: linear-gradient(135deg, #150e1a 0%, #22163a 100%); }
+    .g4 { background: linear-gradient(135deg, #0e1a14 0%, #162a20 100%); }
+    .g5 { background: linear-gradient(135deg, #1a0e0e 0%, #2a1616 100%); }
+    .g6 { background: linear-gradient(135deg, #1a1208 0%, #241a0a 100%); }
+    .g7 { background: linear-gradient(135deg, #0e1520 0%, #1a2840 100%); }
+    .g8 { background: linear-gradient(135deg, #150e1a 0%, #20182e 100%); }
+
+    /* ── SERVICES / RENT ── */
+    #services { background: var(--warm-white); }
+    #services .section-label { color: var(--mid); }
+    .services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3rem; }
+    .service-card {
+      border: 1px solid var(--light-border); padding: 2.4rem;
+      transition: border-color 0.3s, transform 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .service-card::before {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px; background: var(--accent); transform: scaleX(0);
+      transition: transform 0.3s; transform-origin: left;
+    }
+    .service-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-icon {
+      font-size: 2rem; margin-bottom: 1.2rem; display: block;
+    }
+    .service-card h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700;
+      color: var(--ink); margin-bottom: 0.7rem;
+    }
+    .service-card p { font-size: 0.9rem; color: var(--mid); line-height: 1.7; }
+    .service-price {
+      margin-top: 1.5rem; font-size: 0.78rem; font-weight: 500;
+      color: var(--accent-dim); text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .service-rent-btn {
+      margin-top: 1rem; background: var(--ink); color: var(--cream);
+      border: none; padding: 0.6rem 1.4rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s;
+      display: inline-block; text-decoration: none;
+    }
+    .service-rent-btn:hover { background: var(--accent); color: var(--ink); }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--dark-section);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start;
+    }
+    #contact .section-label { color: var(--accent); }
+    #contact .section-title { color: var(--cream); }
+    .contact-subtitle { color: rgba(245,240,232,0.45); font-size: 0.95rem; line-height: 1.7; margin-top: 1rem; }
+    .contact-info { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
+    .contact-info-item { display: flex; align-items: center; gap: 1rem; }
+    .contact-info-icon { font-size: 1.1rem; color: var(--accent); width: 20px; text-align: center; }
+    .contact-info-text { font-size: 0.9rem; color: rgba(245,240,232,0.6); }
+    .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(245,240,232,0.4); }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(245,240,232,0.1);
+      color: var(--cream); padding: 0.85rem 1rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s; resize: none;
+      appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select,
+    .form-group textarea:focus { border-color: var(--accent); }
+    .form-group select { cursor: pointer; }
+    .form-group select option { background: #1c1917; }
+    .form-submit {
+      background: var(--accent); color: var(--ink);
+      border: none; padding: 1rem 2.5rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s, transform 0.15s;
+      align-self: flex-start; margin-top: 0.4rem;
+    }
+    .form-submit:hover { background: var(--accent-dim); transform: translateY(-2px); }
+
+    /* ── THANK YOU PAGE ── */
+    #thankyou {
+      display: none;
+      min-height: 100vh; background: var(--dark-section);
+      align-items: center; justify-content: center;
+      text-align: center; padding: 4rem 2rem;
+      flex-direction: column;
+    }
+    #thankyou.visible { display: flex; }
+    .thankyou-inner { max-width: 560px; }
+    .ty-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(232,193,112,0.1); border: 1px solid rgba(232,193,112,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; margin: 0 auto 2rem;
+      animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    }
+    .ty-badge {
+      display: inline-block; background: rgba(232,193,112,0.12);
+      border: 1px solid rgba(232,193,112,0.25);
+      color: var(--accent); font-size: 0.7rem; letter-spacing: 0.18em;
+      text-transform: uppercase; padding: 0.35rem 1rem; margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .ty-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900;
+      color: var(--cream); line-height: 1.1; margin-bottom: 1.2rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .ty-headline em { font-style: italic; color: var(--accent); }
+    .ty-sub {
+      font-size: 1rem; color: rgba(245,240,232,0.5); line-height: 1.8;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .ty-divider {
+      width: 60px; height: 1px; background: rgba(232,193,112,0.3);
+      margin: 1.5rem auto;
+    }
+    .ty-mail-note {
+      display: inline-flex; align-items: center; gap: 0.7rem;
+      background: rgba(232,193,112,0.07); border: 1px solid rgba(232,193,112,0.15);
+      color: rgba(245,240,232,0.6); font-size: 0.88rem; padding: 0.9rem 1.6rem;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .ty-mail-note span { color: var(--accent); font-size: 1.1rem; }
+    .ty-back {
+      margin-top: 3rem; background: transparent; color: var(--accent);
+      border: 1px solid rgba(232,193,112,0.3); padding: 0.75rem 2rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.2s;
+      animation: fadeUp 0.6s 0.5s ease both;
+    }
+    .ty-back:hover { background: rgba(232,193,112,0.08); border-color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0a0907; padding: 3rem 4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; gap: 1.5rem;
+    }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--accent); }
+    .footer-copy { font-size: 0.78rem; color: rgba(245,240,232,0.25); }
+    .footer-socials { display: flex; gap: 1.2rem; }
+    .footer-socials a {
+      color: rgba(245,240,232,0.3); text-decoration: none; font-size: 0.78rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .footer-socials a:hover { color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.5); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      nav { padding: 1.2rem 2rem; }
+      section { padding: 5rem 2rem; }
+      #hero { padding: 0 2rem; }
+      .hero-image-block { display: none; }
+      #about { grid-template-columns: 1fr; gap: 3rem; }
+      .about-img-badge { right: 1rem; }
+      #contact { grid-template-columns: 1fr; gap: 3rem; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item:nth-child(1) { grid-column: span 2; }
+      .gallery-item:nth-child(5) { grid-column: span 1; }
+      .gallery-item:nth-child(8) { grid-column: span 1; }
+    }
+
+    @media (max-width: 680px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 60px; left: 0; right: 0; background: rgba(14,14,14,0.98); padding: 1.5rem; gap: 1.2rem; }
+      .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      section { padding: 4rem 1.5rem; }
+      #hero { padding: 0 1.5rem; padding-top: 5rem; }
+      .hero-scroll { left: 1.5rem; }
+      .hero-actions { flex-direction: column; }
+      .btn-primary, .btn-ghost { text-align: center; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; gap: 1px; }
+      .gallery-item:nth-child(1) { grid-column: span 2; }
+      .gallery-item:nth-child(5),
+      .gallery-item:nth-child(8) { grid-column: span 2; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
+      .gallery-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">PIX</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#services">Rent</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book a Session</button>
+  <div class="hamburger" id="hamburger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grain"></div>
+  <div class="hero-accent-line"></div>
+  <div class="hero-accent-line2"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Freelance Photographer</p>
+    <h1 class="hero-headline">
+      Moments<br>made <em>eternal.</em>
+    </h1>
+    <p class="hero-tagline">
+      Light, shadow, and the quiet weight of a perfect frame — every image tells the story you never knew you needed.
+    </p>
+    <div class="hero-actions">
+      <a href="#gallery" class="btn-primary">View Portfolio</a>
+      <a href="#services" class="btn-ghost">Rent & License</a>
+    </div>
+  </div>
+  <div class="hero-image-block">
+    <div class="hero-img-placeholder">PIX</div>
+  </div>
+  <div class="hero-scroll">
+    <span class="scroll-line"></span>
+    Scroll to explore
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-text-col">
+    <p class="section-label">About PIX</p>
+    <h2 class="section-title">A lens on the world's hidden beauty.</h2>
+    <div class="about-text">
+      <p>I'm PIX — a freelance photographer based wherever the light is good. For over a decade I've been capturing portraits, landscapes, and the raw textures of urban life that most people walk past without a second glance.</p>
+      <p>Every project is a collaboration. Whether it's a personal portrait, a licensed wallpaper, or a bold editorial campaign, I bring the same obsessive care to framing and post-processing that makes each image feel unmistakably alive.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-item">
+        <div class="stat-num">340+</div>
+        <div class="stat-label">Projects Completed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">12yr</div>
+        <div class="stat-label">Experience</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">80+</div>
+        <div class="stat-label">Licensed Images</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">24</div>
+        <div class="stat-label">Countries Shot</div>
+      </div>
+    </div>
+  </div>
+  <div class="about-visual">
+    <div class="about-img-main g1">
+      <span style="font-size:4rem;color:rgba(232,193,112,0.1);font-family:'Playfair Display',serif;font-style:italic;">PIX</span>
+    </div>
+    <div class="about-img-badge">
+      <strong>PIX</strong>
+      Est. 2012<br>Photography
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gallery-header">
+    <div>
+      <p class="section-label">Portfolio</p>
+      <h2 class="section-title" style="color:var(--cream)">Selected Works</h2>
+      <p class="gallery-subtitle">Click any image to preview · Rent or buy a license instantly</p>
+    </div>
+    <div class="gallery-filter">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="portrait">Portrait</button>
+      <button class="filter-btn" data-filter="landscape">Landscape</button>
+      <button class="filter-btn" data-filter="urban">Urban</button>
+      <button class="filter-btn" data-filter="abstract">Abstract</button>
+    </div>
+  </div>
+
+  <div class="gallery-grid" id="galleryGrid">
+
+    <!-- 1: Golden Hour Portrait – span 2×2 -->
+    <div class="gallery-item g1" data-cat="portrait"
+         data-title="Golden Hour" data-tag="Portrait" data-price="Buy $49 · Rent $19/mo"
+         data-desc="Warm-toned editorial portrait shot at dusk. Includes full model release.">
+      <svg viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg" style="min-height:440px">
+        <defs>
+          <radialGradient id="p1bg" cx="50%" cy="40%" r="70%">
+            <stop offset="0%" stop-color="#5c3a1e"/>
+            <stop offset="100%" stop-color="#1a0c04"/>
+          </radialGradient>
+          <radialGradient id="skin1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#c8845a"/>
+            <stop offset="100%" stop-color="#a05c36"/>
+          </radialGradient>
+        </defs>
+        <rect width="600" height="500" fill="url(#p1bg)"/>
+        <!-- sunset glow -->
+        <ellipse cx="300" cy="480" rx="320" ry="180" fill="#e87a20" opacity="0.35"/>
+        <ellipse cx="300" cy="500" rx="220" ry="120" fill="#f4a340" opacity="0.25"/>
+        <!-- light rays -->
+        <line x1="300" y1="500" x2="80" y2="0" stroke="#f4c060" stroke-width="40" opacity="0.06"/>
+        <line x1="300" y1="500" x2="500" y2="0" stroke="#f4c060" stroke-width="30" opacity="0.05"/>
+        <!-- body silhouette -->
+        <ellipse cx="300" cy="410" rx="90" ry="110" fill="#1a0c04"/>
+        <!-- neck -->
+        <rect x="280" y="290" width="40" height="60" rx="10" fill="url(#skin1)"/>
+        <!-- head -->
+        <ellipse cx="300" cy="265" rx="55" ry="65" fill="url(#skin1)"/>
+        <!-- hair -->
+        <ellipse cx="300" cy="220" rx="58" ry="40" fill="#1a0c04"/>
+        <ellipse cx="260" cy="260" rx="22" ry="38" fill="#1a0c04"/>
+        <ellipse cx="340" cy="260" rx="22" ry="38" fill="#1a0c04"/>
+        <!-- eyes -->
+        <ellipse cx="282" cy="265" rx="9" ry="6" fill="#1a0c04"/>
+        <ellipse cx="318" cy="265" rx="9" ry="6" fill="#1a0c04"/>
+        <circle cx="282" cy="264" r="2.5" fill="white"/>
+        <circle cx="318" cy="264" r="2.5" fill="white"/>
+        <!-- lips -->
+        <path d="M290 282 Q300 290 310 282" stroke="#c05030" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- rim light -->
+        <ellipse cx="300" cy="265" rx="58" ry="68" fill="none" stroke="#f4a340" stroke-width="3" opacity="0.4"/>
+        <!-- watermark -->
+        <text x="300" y="455" text-anchor="middle" font-family="Georgia,serif" font-size="28" font-weight="bold" fill="white" opacity="0.18" letter-spacing="8">© PIX</text>
+        <text x="300" y="478" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="white" opacity="0.14" letter-spacing="4">WATERMARKED PREVIEW</text>
+      </svg>
+      <div class="gallery-overlay">
+        <div class="gallery-info">
+          <div class="gi-tag">Portrait</div>
+          <h4>Golden Hour</h4>
+          <div class="gi-price">Buy $49 · Rent $19/mo</div>
+          <div class="gi-actions">
+            <button class="gi-btn gi-btn-buy" onclick="event.stopPropagation();showThankYou('Portraits')">Buy License</button>
+            <button class="gi-btn gi-btn-rent" onclick="event.stopPropagation();showThankYou('Portraits')">Rent</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2: Mountain Landscape -->
+    <div class="gallery-item g2" data-cat="landscape"
+         data-title="Alpine Silence" data-tag="Landscape" data-price="Buy $35 · Rent $12/mo"
+         data-desc="Pre-dawn alpine panorama with mist rolling through the valley. Perfect for wallpaper use.">
+      <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" style="min-height:220px">
+        <defs>
+          <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a2a4a"/>
+            <stop offset="60%" stop-color="#2e4a6e"/>
+            <stop offset="100%" stop-color="#7090a0"/>
+          </linearGradient>
+        </defs>
+        <rect width="300" height="220" fill="url(#sky2)"/>
+        <!-- stars -->
+        <circle cx="30" cy="20" r="1" fill="white" opacity="0.7"/>
+        <circle cx="80" cy="10" r="1.2" fill="white" opacity="0.8"/>
+        <circle cx="150" cy="8" r="1" fill="white" opacity="0.6"/>
+        <circle cx="220" cy="15" r="1.2" fill="white" opacity="0.7"/>
+        <circle cx="270" cy="22" r="1" fill="white" opacity="0.5"/>
+        <circle cx="55" cy="35" r="0.8" fill="white" opacity="0.6"/>
+        <circle cx="190" cy="30" r="1" fill="white" opacity="0.8"/>
+        <!-- moon -->
+        <circle cx="240" cy="35" r="16" fill="#d4e8f0" opacity="0.9"/>
+        <circle cx="248" cy="30" r="13" fill="#2e4a6e"/>
+        <!-- far mountains -->
+        <polygon points="0,160 60,80 120,130 180,60 240,110 300,70 300,220 0,220" fill="#1a304a" opacity="0.9"/>
+        <!-- mid mountains -->
+        <polygon points="0,190 80,120 160,160 240,100 300,140 300,220 0,220" fill="#0e1e30"/>
+        <!-- mist -->
+        <ellipse cx="150" cy="195" rx="180" ry="30" fill="white" opacity="0.07"/>
+        <!-- snow caps -->
+        <polygon points="60,80 48,92 72,92" fill="white" opacity="0.7"/>
+        <polygon points="180,60 168,75 192,75" fill="white" opacity="0.8"/>
+        <polygon points="300,70 290,84 310,84" fill="white" opacity="0.6"/>
+        <!-- foreground -->
+        <rect x="0" y="200" width="300" height="20" fill="#0a1420"/>
+        <!-- water reflection -->
+        <ellipse cx="150" cy="215" rx="100" ry="8" fill="#2e4a6e" opacity="0.5"/>
+        <!-- watermark -->
+        <text x="150" y="185" text-anchor="middle" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="white" opacity="0.2" letter-spacing="5">© PIX</text>
+      </svg>
+      <div class="gallery-overlay">
+        <div class="gallery-info">
+          <div class="gi-tag">Landscape</div>
+          <h4>Alpine Silence</h4>
+          <div class="gi-price">Buy $35 · Rent $12/mo</div>
+          <div class="gi-actions">
+            <button class="gi-btn gi-btn-buy" onclick="event.stopPropagation();showThankYou('Wallpapers')">Buy License</button>
+            <button class="gi-btn gi-btn-rent" onclick="event.stopPropagation();showThankYou('Wallpapers')">Rent</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3: Night City Urban -->
+    <div class="gallery-item g7" data-cat="urban"
+         data-title="Neon Veins" data-tag="Urban" data-price="Buy $29 · Rent $10/mo"
+         data-desc="Long exposure city street at midnight. Streaks of headlights slice through the dark.">
+      <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" style="min-height:220px">
+        <defs>
+          <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#050810"/>
+            <stop offset="100%" stop-color="#0d1428"/>
+          </linearGradient>
+        </defs>
+        <rect width="300" height="220" fill="url(#sky3)"/>
+        <!-- buildings -->
+        <rect x="0" y="60" width="40" height="160" fill="#0a0f1c"/>
+        <rect x="44" y="90" width="30" height="130" fill="#0d1428"/>
+        <rect x="78" y="40" width="50" height="180" fill="#080c18"/>
+        <rect x="132" y="70" width="36" height="150" fill="#0a0f1c"/>
+        <rect x="172" y="50" width="55" height="170" fill="#0d1428"/>
+        <rect x="231" y="80" width="40" height="140" fill="#080c18"/>
+        <rect x="275" y="55" width="25" height="165" fill="#0a0f1c"/>
+        <!-- building windows -->
+        <rect x="6" y="70" width="6" height="5" fill="#f4c060" opacity="0.8"/>
+        <rect x="18" y="70" width="6" height="5" fill="#f4c060" opacity="0.6"/>
+        <rect x="6" y="90" width="6" height="5" fill="#8ab4e8" opacity="0.7"/>
+        <rect x="18" y="90" width="6" height="5" fill="#f4c060" opacity="0.5"/>
+        <rect x="84" y="55" width="7" height="5" fill="#f4c060" opacity="0.9"/>
+        <rect x="96" y="55" width="7" height="5" fill="#8ab4e8" opacity="0.7"/>
+        <rect x="108" y="55" width="7" height="5" fill="#f4c060" opacity="0.6"/>
+        <rect x="84" y="70" width="7" height="5" fill="#8ab4e8" opacity="0.5"/>
+        <rect x="108" y="70" width="7" height="5" fill="#f4c060" opacity="0.8"/>
+        <rect x="178" y="60" width="8" height="6" fill="#f4c060" opacity="0.9"/>
+        <rect x="190" y="60" width="8" height="6" fill="#ff8060" opacity="0.7"/>
+        <rect x="202" y="60" width="8" height="6" fill="#f4c060" opacity="0.8"/>
+        <rect x="178" y="76" width="8" height="6" fill="#8ab4e8" opacity="0.6"/>
+        <rect x="202" y="76" width="8" height="6" fill="#f4c060" opacity="0.7"/>
+        <!-- street -->
+        <rect x="0" y="180" width="300" height="40" fill="#040608"/>
+        <!-- light streaks -->
+        <line x1="0" y1="190" x2="300" y2="195" stroke="#f4c060" stroke-width="1.5" opacity="0.7"/>
+        <line x1="0" y1="196" x2="300" y2="200" stroke="#ff4040" stroke-width="1" opacity="0.5"/>
+        <line x1="0" y1="202" x2="300" y2="206" stroke="#f4c060" stroke-width="2" opacity="0.4"/>
+        <!-- neon sign glow -->
+        <rect x="172" y="50" width="55" height="5" fill="#e060ff" opacity="0.4"/>
+        <text x="176" y="54" font-family="sans-serif" font-size="4" fill="#e060ff" opacity="0.9">OPEN 24H</text>
+        <!-- watermark -->
+        <text x="150" y="172" text-anchor="middle" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="white" opacity="0.18" letter-spacing="5">© PIX</text>
+      </svg>
+      <div class="gallery-overlay">
+        <div class="gallery-info">
+          <div class="gi-tag">Urban</div>
+          <h4>Neon Veins</h4>
+          <div class="gi-price">Buy $29 · Rent $10/mo</div>
+          <div class="gi-actions">
+            <button class="gi-btn gi-btn-buy" onclick="event.stopPropagation();showThankYou('Template Images')">Buy License</button>
+            <button class="gi-btn gi-btn-rent" onclick="event.stopPropagation();showThankYou('Template Images')">Rent</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4: Forest Nature -->
+    <div class="gallery-item g4" data-cat="landscape"
+         data-title="Still Green" data-tag="Nature" data-price="Buy $29 · Rent $10/mo"
+         data-desc="Misty morning in an old-growth forest. Light filters through ancient canopy.">
+      <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" style="min-height:220px">
+        <defs>
+          <linearGradient id="forest-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#a8d8b0"/>
+            <stop offset="100%" stop-color="#4a8a5a"/>
+          </linearGradient>
+          <linearGradient id="forest-ground" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2a4a2e"/>
+            <stop offset="100%" stop-color="#1a2e1e"/>
+          </linearGradient>
+        </defs>
+        <rect width="300" height="220" fill="url(#forest-sky)"/>
+        <!-- light rays -->
+        <polygon points="130,0 110,180 150,180" fill="white" opacity="0.08"/>
+        <polygon points="170,0 155,180 185,180" fill="white" opacity="0.06"/>
+        <polygon points="200,0 188,180 212,180" fill="white" opacity="0.05"/>
+        <!-- background trees -->
+        <rect x="20" y="60" width="12" height="160" fill="#1e3824"/>
+        <rect x="60" y="40" width="14" height="180" fill="#1a3020"/>
+        <rect x="100" y="50" width="12" height="170" fill="#1e3824"/>
+        <rect x="140" y="30" width="16" height="190" fill="#162a1c"/>
+        <rect x="185" y="45" width="13" height="175" fill="#1e3824"/>
+        <rect x="230" y="55" width="14" height="165" fill="#1a3020"/>
+        <rect x="268" y="40" width="12" height="180" fill="#1e3824"/>
+        <!-- tree tops background -->
+        <ellipse cx="26" cy="60" rx="28" ry="35" fill="#2a5030"/>
+        <ellipse cx="67" cy="40" rx="32" ry="38" fill="#244a28"/>
+        <ellipse cx="106" cy="50" rx="30" ry="36" fill="#2a5030"/>
+        <ellipse cx="148" cy="30" rx="35" ry="42" fill="#1e4424"/>
+        <ellipse cx="191" cy="45" rx="30" ry="37" fill="#2a5030"/>
+        <ellipse cx="237" cy="55" rx="32" ry="36" fill="#244a28"/>
+        <ellipse cx="274" cy="40" rx="28" ry="34" fill="#2a5030"/>
+        <!-- ground -->
+        <rect x="0" y="170" width="300" height="50" fill="url(#forest-ground)"/>
+        <!-- mist -->
+        <ellipse cx="150" cy="175" rx="200" ry="22" fill="white" opacity="0.12"/>
+        <!-- ferns -->
+        <ellipse cx="50" cy="200" rx="40" ry="12" fill="#3a6040" opacity="0.8"/>
+        <ellipse cx="250" cy="200" rx="40" ry="12" fill="#3a6040" opacity="0.8"/>
+        <!-- sun beam -->
+        <circle cx="150" cy="20" r="18" fill="#f0e870" opacity="0.25"/>
+        <!-- watermark -->
+        <text x="150" y="155" text-anchor="middle" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="white" opacity="0.22" letter-spacing="5">© PIX</text>
+      </svg>
+      <div class="gallery-overlay">
+        <div class="gallery-info">
+          <div class="gi-tag">Nature</div>
+          <h4>Still Green</h4>
+          <div class="gi-price">Buy $29 · Rent $10/mo</div>
+          <div class="gi-actions">
+            <button class="gi-btn gi-btn-buy" onclick="event.stopPropagation();showThankYou('Wallpapers')">Buy License</button>
+            <button class="gi-btn gi-btn-rent" onclick="event.stopPropagation();showThankYou('Wallpapers')">Rent</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5: Desert Sunset – span 2 wide -->
+    <div class="gallery-item g5" data-cat="landscape"
+         data-title="Dune Dusk" data-tag="Landscape" data-price="Buy $39 · Rent $14/mo"
+         data-desc="Sahara-inspired dune landscape at golden hour. Ultra-wide ready at 5K resolution.">
+      <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="min-height:220px">
+        <defs>
+          <linearGradient id="desert-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3a1a08"/>
+            <stop offset="40%" stop-color="#c04a10"/>
+            <stop offset="70%" stop-color="#e88020"/>
+            <stop offset="100%" stop-color="#f4b840"/>
+          </linearGradient>
+          <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#c87830"/>
+            <stop offset="100%" stop-color="#8a4a18"/>
+          </linearGradient>
+        </defs>
+        <rect width="600" height="220" fill="url(#desert-sky)"/>
+        <!-- sun -->
+        <circle cx="300" cy="130" r="42" fill="#f4d060" opacity="0.9"/>
+        <circle cx="300" cy="130" r="55" fill="#f4a020" opacity="0.25"/>
+        <circle cx="300" cy="130" r="70" fill="#e87020" opacity="0.12"/>
+        <!-- horizon haze -->
+        <ellipse cx="300" cy="150" rx="320" ry="30" fill="#e87020" opacity="0.3"/>
+        <!-- dunes -->
+        <path d="M0,180 Q80,140 180,165 Q280,130 380,160 Q480,140 600,170 L600,220 L0,220Z" fill="url(#sand)"/>
+        <path d="M0,195 Q100,170 200,185 Q300,162 400,178 Q500,165 600,182 L600,220 L0,220Z" fill="#a05c20"/>
+        <!-- shadow on dunes -->
+        <path d="M180,165 Q230,155 280,158 Q260,168 180,165Z" fill="#6a3010" opacity="0.5"/>
+        <path d="M380,160 Q430,150 480,155 Q460,165 380,160Z" fill="#6a3010" opacity="0.4"/>
+        <!-- camel silhouette -->
+        <ellipse cx="460" cy="162" rx="28" ry="14" fill="#1a0a04"/>
+        <rect x="448" y="148" width="8" height="18" fill="#1a0a04"/>
+        <rect x="468" y="150" width="8" height="16" fill="#1a0a04"/>
+        <ellipse cx="448" cy="142" rx="12" ry="10" fill="#1a0a04"/>
+        <rect x="444" y="132" width="5" height="14" fill="#1a0a04"/>
+        <!-- hump -->
+        <ellipse cx="465" cy="145" rx="14" ry="10" fill="#1a0a04"/>
+        <!-- watermark -->
+        <text x="300" y="200" text-anchor="middle" font-family="Georgia,serif" font-size="20" font-weight="bold" fill="white" opacity="0.18" letter-spacing="6">© PIX</text>
+      </svg>
+      <div class="gallery-overlay">
+        <div class="gallery-info">
+          <div class="gi-tag">Landscape</div>
+          <h4>Dune Dusk</h4>
+          <div class="gi-price">Buy $39 · Rent $14/mo</div>
+          <div class="gi-actions">
+            <button class="gi-btn gi-btn-buy" onclick="event.stopPropagation();showThankYou('Wallpapers')">Buy License</button>
+            <button class="gi-btn gi-btn-rent" onclick="event.stopPropagation();showThankYou('Wallpapers')">Rent</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6: Abstract -->
+    <div class="gallery-item g3" data-cat="abstract"
+         data-title="Refraction" data-tag="Abstract" data-price="Buy $25 · Rent $9/mo"
+         data-desc="Studio macro shot through a prism. Prismatic light bands across dark velvet.">
+      <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" style="min-height:220px">
+        <defs>
+          <linearGradient id="prism-bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#080510"/>
+            <stop offset="100%" stop-color="#0e0818"/>
+          </linearGradient>
+        </defs>
+        <rect width="300" height="220" fill="url(#prism-bg)"/>
+        <!-- prism shape -->
+        <polygon points="150,30 80,190 220,190" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+        <!-- light beam in -->
+        <line x1="0" y1="60" x2="150" y2="30" stroke="white" stroke-width="3" opacity="0.5"/>
+        <!-- refracted color bands -->
+        <line x1="150" y1="30" x2="300" y2="80" stroke="#ff3060" stroke-width="4" opacity="0.85"/>
+        <line x1="150" y1="30" x2="300" y2="96" stroke="#ff8030" stroke-width="3.5" opacity="0.8"/>
+        <line x1="150" y1="30" x2="300" y2="112" stroke="#f4e030" stroke-width="3" opacity="0.8"/>
+        <line x1="150" y1="30" x2="300" y2="126" stroke="#40e060" stroke-width="3" opacity="0.8"/>
+        <line x1="150" y1="30" x2="300" y2="140" stroke="#30a0f4" stroke-width="3" opacity="0.8"/>
+        <line x1="150" y1="30" x2="300" y2="156" stroke="#8040f0" stroke-width="3.5" opacity="0.8"/>
+        <line x1="150" y1="30" x2="300" y2="172" stroke="#e040c0" stroke-width="4" opacity="0.7"/>
+        <!-- glow at prism tip -->
+        <circle cx="150" cy="30" r="8" fill="white" opacity="0.6"/>
+        <circle cx="150" cy="30" r="18" fill="white" opacity="0.15"/>
+        <!-- sparkles -->
+        <circle cx="60" cy="100" r="2" fill="white" opacity="0.4"/>
+        <circle cx="240" cy="50" r="1.5" fill="white" opacity="0.3"/>
+        <circle cx="200" cy="170" r="2" fill="#f4e030" opacity="0.3"/>
+        <!-- watermark -->
+        <text x="150" y="210" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="bold" fill="white" opacity="0.2" letter-spacing="5">© PIX</text>
+      </svg>
+      <div class="gallery-overlay">
+        <div class="gallery-info">
+          <div class="gi-tag">Abstract</div>
+          <h4>Refraction</h4>
+          <div class="gi-price">Buy $25 · Rent $9/mo</div>
+          <div class="gi-actions">
+            <button class="gi-btn gi-btn-buy" onclick="event.stopPropagation();showThankYou('Template Images')">Buy License</button>
+            <button class="gi-btn gi-btn-rent" onclick="event.stopPropagation();showThankYou('Template Images')">Rent</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7: Studio Portrait -->
+    <div class="gallery-item g1" data-cat="portrait"
+         data-title="Stark Light" data-tag="Portrait" data-price="Buy $55 · Rent $22/mo"
+         data-desc="High-contrast studio portrait. Split-lighting setup on neutral grey. Model release included.">
+      <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" style="min-height:220px">
+        <defs>
+          <linearGradient id="studio-bg" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#080808"/>
+            <stop offset="50%" stop-color="#2a2a2a"/>
+            <stop offset="100%" stop-color="#0e0e0e"/>
+          </linearGradient>
+          <radialGradient id="skin2" cx="45%" cy="50%" r="55%">
+            <stop offset="0%" stop-color="#d4906a"/>
+            <stop offset="100%" stop-color="#7a3818"/>
+          </radialGradient>
+        </defs>
+        <rect width="300" height="220" fill="url(#studio-bg)"/>
+        <!-- rim glow from side light -->
+        <ellipse cx="30" cy="110" rx="60" ry="100" fill="#f8e8d0" opacity="0.06"/>
+        <!-- shirt/shoulders -->
+        <path d="M90,220 Q100,170 150,165 Q200,170 210,220Z" fill="#1a1a1a"/>
+        <!-- neck -->
+        <rect x="138" y="130" width="24" height="40" rx="8" fill="url(#skin2)"/>
+        <!-- head -->
+        <ellipse cx="150" cy="105" rx="44" ry="50" fill="url(#skin2)"/>
+        <!-- dark side shadow (split light) -->
+        <ellipse cx="174" cy="105" rx="26" ry="50" fill="#1a0a04" opacity="0.5"/>
+        <!-- hair -->
+        <ellipse cx="150" cy="68" rx="46" ry="28" fill="#160e08"/>
+        <ellipse cx="115" cy="100" rx="16" ry="28" fill="#160e08"/>
+        <!-- ear -->
+        <ellipse cx="108" cy="108" rx="7" ry="10" fill="#b8704a"/>
+        <!-- eyebrows -->
+        <path d="M128,92 Q138,88 148,92" stroke="#160e08" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- eyes - closed / half -->
+        <ellipse cx="134" cy="100" rx="8" ry="5" fill="#160e08"/>
+        <ellipse cx="163" cy="100" rx="7" ry="4" fill="#160e08" opacity="0.4"/>
+        <line x1="126" y1="100" x2="142" y2="100" stroke="#160e08" stroke-width="2"/>
+        <!-- nose -->
+        <path d="M148,112 Q144,118 148,120 Q152,118 152,112" stroke="#a05030" stroke-width="1.5" fill="none"/>
+        <!-- lips -->
+        <path d="M138,128 Q150,135 162,128" stroke="#c05840" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- key light catchlight -->
+        <circle cx="131" cy="97" r="2" fill="white" opacity="0.7"/>
+        <!-- watermark -->
+        <text x="150" y="195" text-anchor="middle" font-family="Georgia,serif" font-size="15" font-weight="bold" fill="white" opacity="0.22" letter-spacing="5">© PIX</text>
+      </svg>
+      <div class="gallery-overlay">
+        <div class="gallery-info">
+          <div class="gi-tag">Portrait</div>
+          <h4>Stark Light</h4>
+          <div class="gi-price">Buy $55 · Rent $22/mo</div>
+          <div class="gi-actions">
+            <button class="gi-btn gi-btn-buy" onclick="event.stopPropagation();showThankYou('Portraits')">Buy License</button>
+            <button class="gi-btn gi-btn-rent" onclick="event.stopPropagation();showThankYou('Portraits')">Rent</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8: Ocean Waves – span 2 wide -->
+    <div class="gallery-item g2" data-cat="landscape"
+         data-title="Open Water" data-tag="Landscape" data-price="Buy $35 · Rent $12/mo"
+         data-desc="Pacific coast long exposure. Silky water motion against volcanic black rock.">
+      <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="min-height:220px">
+        <defs>
+          <linearGradient id="ocean-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0a1828"/>
+            <stop offset="60%" stop-color="#1a3a5a"/>
+            <stop offset="100%" stop-color="#2a6088"/>
+          </linearGradient>
+          <linearGradient id="ocean-water" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a4060"/>
+            <stop offset="100%" stop-color="#0e2038"/>
+          </linearGradient>
+        </defs>
+        <rect width="600" height="220" fill="url(#ocean-sky)"/>
+        <!-- horizon glow -->
+        <ellipse cx="300" cy="120" rx="320" ry="25" fill="#3880b8" opacity="0.3"/>
+        <!-- water -->
+        <rect x="0" y="115" width="600" height="105" fill="url(#ocean-water)"/>
+        <!-- wave lines (long exposure silky effect) -->
+        <path d="M0,125 Q75,118 150,125 Q225,132 300,125 Q375,118 450,125 Q525,132 600,125" stroke="white" stroke-width="1" fill="none" opacity="0.25"/>
+        <path d="M0,135 Q100,128 200,135 Q300,142 400,135 Q500,128 600,135" stroke="white" stroke-width="0.8" fill="none" opacity="0.18"/>
+        <path d="M0,145 Q80,140 160,145 Q240,150 320,145 Q400,140 480,145 Q540,150 600,145" stroke="white" stroke-width="0.6" fill="none" opacity="0.14"/>
+        <!-- rocks -->
+        <ellipse cx="80" cy="140" rx="50" ry="22" fill="#1a1410"/>
+        <ellipse cx="520" cy="148" rx="60" ry="18" fill="#1a1410"/>
+        <ellipse cx="320" cy="155" rx="35" ry="14" fill="#1a1410"/>
+        <!-- foam around rocks -->
+        <ellipse cx="80" cy="132" rx="55" ry="8" fill="white" opacity="0.18"/>
+        <ellipse cx="520" cy="140" rx="65" ry="7" fill="white" opacity="0.15"/>
+        <!-- stars -->
+        <circle cx="100" cy="30" r="1" fill="white" opacity="0.6"/>
+        <circle cx="200" cy="20" r="1.2" fill="white" opacity="0.7"/>
+        <circle cx="350" cy="15" r="1" fill="white" opacity="0.5"/>
+        <circle cx="480" cy="25" r="1.2" fill="white" opacity="0.6"/>
+        <circle cx="560" cy="40" r="1" fill="white" opacity="0.5"/>
+        <!-- moon reflection on water -->
+        <ellipse cx="300" cy="150" rx="15" ry="40" fill="white" opacity="0.06"/>
+        <!-- moon -->
+        <circle cx="300" cy="50" r="20" fill="#e8f0f8" opacity="0.85"/>
+        <circle cx="308" cy="45" r="16" fill="#1a3a5a"/>
+        <!-- watermark -->
+        <text x="300" y="200" text-anchor="middle" font-family="Georgia,serif" font-size="20" font-weight="bold" fill="white" opacity="0.18" letter-spacing="6">© PIX</text>
+      </svg>
+      <div class="gallery-overlay">
+        <div class="gallery-info">
+          <div class="gi-tag">Landscape</div>
+          <h4>Open Water</h4>
+          <div class="gi-price">Buy $35 · Rent $12/mo</div>
+          <div class="gi-actions">
+            <button class="gi-btn gi-btn-buy" onclick="event.stopPropagation();showThankYou('Wallpapers')">Buy License</button>
+            <button class="gi-btn gi-btn-rent" onclick="event.stopPropagation();showThankYou('Wallpapers')">Rent</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /gallery-grid -->
+</section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <div class="lb-inner">
+    <button class="lb-close" onclick="closeLightbox()">✕</button>
+    <div id="lb-svg-wrap"></div>
+    <div class="lb-meta">
+      <div class="lb-meta-left">
+        <div class="lb-tag" id="lb-tag"></div>
+        <div class="lb-title" id="lb-title"></div>
+        <div class="lb-desc" id="lb-desc"></div>
+        <div class="lb-price" id="lb-price"></div>
+      </div>
+      <div class="lb-actions">
+        <button class="gi-btn gi-btn-buy" id="lb-buy-btn" style="font-size:0.82rem;padding:0.6rem 1.4rem">Buy License</button>
+        <button class="gi-btn gi-btn-rent" id="lb-rent-btn" style="font-size:0.82rem;padding:0.6rem 1.4rem">Rent</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES / RENT -->
+<section id="services">
+  <p class="section-label" style="color:var(--mid)">License & Rent</p>
+  <h2 class="section-title">Images for every purpose.</h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <span class="service-icon">🖼️</span>
+      <h3>Template Images</h3>
+      <p>High-resolution, commercially licensed images ready to drop into your design projects, presentations, or digital campaigns.</p>
+      <div class="service-price">From $29 / image</div>
+      <button class="service-rent-btn" onclick="showThankYou('Template Images')">Rent Now</button>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">🌄</span>
+      <h3>Wallpapers</h3>
+      <p>Stunning landscape and abstract shots sized for desktop, mobile, and ultra-wide displays. Single-use or multi-device license available.</p>
+      <div class="service-price">From $15 / image</div>
+      <button class="service-rent-btn" onclick="showThankYou('Wallpapers')">Rent Now</button>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">🧑‍🎨</span>
+      <h3>Portraits</h3>
+      <p>Expressive, editorial-grade portrait photographs for media, branding, or personal use. Each comes with a full model release.</p>
+      <div class="service-price">From $49 / portrait</div>
+      <button class="service-rent-btn" onclick="showThankYou('Portraits')">Rent Now</button>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div>
+    <p class="section-label">Get in Touch</p>
+    <h2 class="section-title">Let's create<br>something <em style="font-style:italic;color:var(--accent)">together.</em></h2>
+    <p class="contact-subtitle">Have a project in mind? A shoot to plan? Or just want to say hello — I'm always up for a good conversation about light and life.</p>
+    <div class="contact-info">
+      <div class="contact-info-item">
+        <span class="contact-info-icon">✉</span>
+        <span class="contact-info-text"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5b333e3737341b2b32232b33342f3475383436">[email&#160;protected]</a></span>
+      </div>
+      <div class="contact-info-item">
+        <span class="contact-info-icon">📍</span>
+        <span class="contact-info-text">Based globally · Available worldwide</span>
+      </div>
+      <div class="contact-info-item">
+        <span class="contact-info-icon">⏱</span>
+        <span class="contact-info-text">Responds within 24 hours</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="contact-form" id="contactForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="Alex" />
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Monroe" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label>I'm interested in</label>
+        <select>
+          <option value="">Select a service…</option>
+          <option>Portrait Session</option>
+          <option>Landscape / Travel</option>
+          <option>Editorial / Commercial</option>
+          <option>Template Image License</option>
+          <option>Wallpaper License</option>
+          <option>Portrait License</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea rows="4" placeholder="Tell me about your project…"></textarea>
+      </div>
+      <button class="form-submit" onclick="showThankYou('Inquiry')">Send Message</button>
+    </div>
+  </div>
+</section>
+
+<!-- THANK YOU PAGE -->
+<div id="thankyou">
+  <div class="thankyou-inner">
+    <div class="ty-icon">✓</div>
+    <div class="ty-badge">Transaction Complete</div>
+    <h1 class="ty-headline">Thank <em>you.</em></h1>
+    <p class="ty-sub" id="tySubText">Your license for <strong style="color:var(--cream)">Template Images</strong> has been successfully processed. The images are yours to use — go make something beautiful.</p>
+    <div class="ty-divider"></div>
+    <div class="ty-mail-note">
+      <span>✉</span>
+      A confirmation is already on its way to your inbox.
+    </div>
+    <br>
+    <button class="ty-back" onclick="hideThankYou()">← Back to PIX</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">PIX</div>
+  <p class="footer-copy">© 2025 PIX Photography. All rights reserved.</p>
+  <div class="footer-socials">
+    <a href="#">Instagram</a>
+    <a href="#">Behance</a>
+    <a href="#">Vsco</a>
+  </div>
+</footer>
+
+<script>
+  // Gallery filter
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('.gallery-item').forEach(item => {
+        if (filter === 'all' || item.dataset.cat === filter) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Lightbox
+  document.querySelectorAll('.gallery-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const svgEl = item.querySelector('svg').cloneNode(true);
+      svgEl.removeAttribute('style');
+      document.getElementById('lb-svg-wrap').innerHTML = '';
+      document.getElementById('lb-svg-wrap').appendChild(svgEl);
+      document.getElementById('lb-tag').textContent = item.dataset.tag;
+      document.getElementById('lb-title').textContent = item.dataset.title;
+      document.getElementById('lb-desc').textContent = item.dataset.desc;
+      document.getElementById('lb-price').textContent = item.dataset.price;
+      const cat = item.dataset.cat;
+      const type = cat === 'portrait' ? 'Portraits' : cat === 'abstract' ? 'Template Images' : 'Wallpapers';
+      document.getElementById('lb-buy-btn').onclick = () => { closeLightbox(); showThankYou(type); };
+      document.getElementById('lb-rent-btn').onclick = () => { closeLightbox(); showThankYou(type); };
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+
+  // Mobile nav
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+  });
+
+  // Thank you
+  function showThankYou(type) {
+    const labels = {
+      'Template Images': 'Your license for <strong style="color:var(--cream)">Template Images</strong> has been successfully processed. The images are yours to use — go make something beautiful.',
+      'Wallpapers': 'Your license for <strong style="color:var(--cream)">Wallpapers</strong> has been successfully processed. Set the scene, one pixel at a time.',
+      'Portraits': 'Your license for <strong style="color:var(--cream)">Portraits</strong> has been successfully processed. Every face tells a story — now it\'s yours to share.',
+      'Inquiry': 'Your message has been received loud and clear. Sit tight — I\'ll be in touch soon.'
+    };
+    document.getElementById('tySubText').innerHTML = labels[type] || labels['Inquiry'];
+    document.getElementById('thankyou').classList.add('visible');
+    document.body.style.overflow = 'hidden';
+    window.scrollTo({ top: 0 });
+  }
+  function hideThankYou() {
+    document.getElementById('thankyou').classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+</script></body></html>
